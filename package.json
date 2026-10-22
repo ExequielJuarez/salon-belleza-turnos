@@ -1,0 +1,10 @@
+﻿{
+  "name": "salon",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Landing con reserva de turnos y panel de administraciÃ³n",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
+

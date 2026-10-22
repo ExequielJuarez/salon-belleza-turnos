@@ -1,0 +1,16 @@
+{
+  "name": "Maison Rosé",
+  "whatsapp": "5491155553456",
+  "address": "Gorriti 5120, Palermo, CABA",
+  "hoursText": "Mar a Sáb · 10 a 19 hs",
+  "adminPassword": "cambiar-esta-clave",
+  "schedule": { "dayStart": "09:00", "dayEnd": "20:00", "step": 30, "from": "10:00", "to": "19:00", "openDays": [2, 3, 4, 5, 6] },
+  "services": [
+    { "name": "Corte y brushing", "price": 18000, "minutes": 60, "desc": "Corte a medida, lavado y peinado." },
+    { "name": "Color completo", "price": 45000, "minutes": 120, "desc": "Tintura raíz a puntas con tratamiento." },
+    { "name": "Balayage / mechas", "price": 85000, "minutes": 180, "desc": "Luces naturales, trabajadas a mano." },
+    { "name": "Manicuría semipermanente", "price": 14000, "minutes": 60, "desc": "Esmaltado duradero, brillo por semanas." },
+    { "name": "Tratamiento capilar", "price": 22000, "minutes": 60, "desc": "Nutrición y reparación profunda." },
+    { "name": "Maquillaje", "price": 25000, "minutes": 60, "desc": "Social, de día o de noche." }
+  ]
+}

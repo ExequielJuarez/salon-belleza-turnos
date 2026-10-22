@@ -1,0 +1,8 @@
+:root {
+  color-scheme: light;
+  --bg: #faf3ec; --fg: #3a2622; --muted: #8a6f66; --card: #fffaf5; --line: #ecd9cc;
+  --accent: #b5543c; --accent-fg: #fff7f0; --radius: 14px;
+  --font-body: 'Jost', system-ui, sans-serif; --font-display: 'Cormorant Garamond', Georgia, serif;
+}
+.bk-submit, .bk-wa, .bk-again, .btn, .seg-b { border-radius: 999px; }
+.seg { border-radius: 999px; }
