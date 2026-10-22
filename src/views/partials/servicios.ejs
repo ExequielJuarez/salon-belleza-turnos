@@ -1,0 +1,12 @@
+<div id="services">
+  <% servicios.forEach((s) => { %>
+    <article class="svc reveal">
+      <div class="svc-top">
+        <h3><%= s.nombre %></h3>
+        <% if (s.precio) { %><span class="svc-price">$<%= s.precio.toLocaleString('es-AR') %></span><% } %>
+      </div>
+      <p><%= s.descripcion %></p>
+      <% if (s.minutos) { %><span class="svc-time"><%= s.minutos %> min</span><% } %>
+    </article>
+  <% }) %>
+</div>

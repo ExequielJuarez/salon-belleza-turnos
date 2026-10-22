@@ -12,20 +12,6 @@ document.querySelectorAll('[data-wa]').forEach((el) => {
   el.rel = 'noopener';
 });
 
-// Servicios
-const svcBox = document.getElementById('services');
-if (svcBox) {
-  cfg.services.forEach((s) =>
-    svcBox.append(
-      h('article', { class: 'svc reveal' },
-        h('div', { class: 'svc-top' }, h('h3', {}, s.name), s.price ? h('span', { class: 'svc-price' }, money(s.price)) : null),
-        h('p', {}, s.desc || ''),
-        s.minutes ? h('span', { class: 'svc-time' }, `${s.minutes} min`) : null
-      )
-    )
-  );
-}
-
 // ---------- widget de reserva ----------
 const mount = document.getElementById('booking');
 if (mount) {

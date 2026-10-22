@@ -9,45 +9,21 @@ const today = ymd(new Date());
 const st = { tab: 'calendar', month: today.slice(0, 7), sel: today, monthData: {}, day: null, filter: 'pending', list: [], template: null };
 const STATUS = { pending: 'Pendiente', confirmed: 'Confirmado', cancelled: 'Cancelado' };
 
-const logout = () => { try { localStorage.removeItem('token'); } catch {} showLogin(); };
+const toLogin = () => { location.href = '/admin/login'; };
+const logout = async () => { try { await fetch('/admin/logout', { method: 'POST' }); } catch {} toLogin(); };
 const guard = async (fn) => {
-  try { return await fn(); } catch (e) { if (e.status === 401) logout(); else toast(e.message); }
+  try { return await fn(); } catch (e) { if (e.status === 401) toLogin(); else toast(e.message); }
 };
 
-// ---------- login ----------
-function showLogin(msg) {
-  const pw = h('input', { type: 'password', id: 'pw', placeholder: 'Contraseña', autocomplete: 'current-password', required: true });
-  const err = h('p', { class: 'err', role: 'alert' }, msg || '');
-  app.replaceChildren(
-    h('main', { class: 'login' },
-      h('form', { class: 'login-card', onsubmit: async (e) => {
-        e.preventDefault();
-        try {
-          const { token } = await api('/api/login', { method: 'POST', body: { password: pw.value } });
-          try { localStorage.setItem('token', token); } catch {}
-          boot();
-        } catch (ex) { err.textContent = ex.message; pw.select(); }
-      } },
-        h('p', { class: 'eyebrow' }, 'Panel de administración'),
-        h('h1', {}, cfg.name),
-        h('label', { for: 'pw' }, 'Contraseña'), pw, err,
-        h('button', { class: 'btn primary', type: 'submit' }, 'Ingresar'),
-        h('a', { class: 'back', href: '/' }, '← Volver a la web')
-      )
-    )
-  );
-  pw.focus();
-}
-
 // ---------- datos ----------
-const loadMonth = () => guard(async () => { st.monthData = (await api('/api/admin/month?month=' + st.month)).days; });
-const loadDay = () => guard(async () => { st.day = await api('/api/admin/day?date=' + st.sel); });
-const loadList = () => guard(async () => { st.list = (await api('/api/admin/bookings?status=' + st.filter)).bookings; });
-const loadTemplate = () => guard(async () => { st.template = (await api('/api/admin/template')).template; });
+const loadMonth = () => guard(async () => { st.monthData = (await api('/admin/api/month?month=' + st.month)).days; });
+const loadDay = () => guard(async () => { st.day = await api('/admin/api/day?date=' + st.sel); });
+const loadList = () => guard(async () => { st.list = (await api('/admin/api/bookings?status=' + st.filter)).bookings; });
+const loadTemplate = () => guard(async () => { st.template = (await api('/admin/api/template')).template; });
 
 async function setBooking(b, status) {
   await guard(async () => {
-    await api('/api/admin/bookings/' + b.id, { method: 'PATCH', body: { status } });
+    await api('/admin/api/bookings/' + b.id, { method: 'PATCH', body: { status } });
     toast(status === 'confirmed' ? 'Turno confirmado' : 'Turno cancelado');
     await Promise.all([loadMonth(), loadDay(), loadList()]);
     render();
@@ -59,7 +35,7 @@ async function setBooking(b, status) {
 
 async function saveDay(times) {
   await guard(async () => {
-    await api('/api/admin/day', { method: 'PUT', body: { date: st.sel, times } });
+    await api('/admin/api/day', { method: 'PUT', body: { date: st.sel, times } });
     await Promise.all([loadMonth(), loadDay()]);
     render();
   });
@@ -138,7 +114,7 @@ function calendarView() {
       h('div', { class: 'row' },
         h('button', { class: 'btn sm', onclick: () => saveDay(cfg.allTimes) }, 'Abrir todo el día'),
         h('button', { class: 'btn sm', onclick: () => saveDay([]) }, 'Cerrar el día'),
-        h('button', { class: 'btn sm', onclick: () => guard(async () => { await api('/api/admin/day?date=' + st.sel, { method: 'DELETE' }); await Promise.all([loadMonth(), loadDay()]); render(); toast('Se usa el horario base'); }) }, 'Usar horario base')),
+        h('button', { class: 'btn sm', onclick: () => guard(async () => { await api('/admin/api/day?date=' + st.sel, { method: 'DELETE' }); await Promise.all([loadMonth(), loadDay()]); render(); toast('Se usa el horario base'); }) }, 'Usar horario base')),
       h('h3', {}, 'Turnos del día'),
       day?.bookings.length ? h('div', { class: 'blist' }, ...day.bookings.map((b) => bookingCard(b, false))) : h('p', { class: 'hint' }, 'Sin turnos este día.')
     )
@@ -176,7 +152,7 @@ function templateView() {
               } }, x);
           })))
     ),
-    h('button', { class: 'btn primary', onclick: () => guard(async () => { await api('/api/admin/template', { method: 'PUT', body: { template: t } }); toast('Horario base guardado'); await Promise.all([loadMonth(), loadDay()]); }) }, 'Guardar horario base')
+    h('button', { class: 'btn primary', onclick: () => guard(async () => { await api('/admin/api/template', { method: 'PUT', body: { template: t } }); toast('Horario base guardado'); await Promise.all([loadMonth(), loadDay()]); }) }, 'Guardar horario base')
   );
 }
 
@@ -204,8 +180,8 @@ function render() {
 
 async function boot() {
   try {
-    await api('/api/admin/template');
-  } catch { return showLogin(); }
+    await api('/admin/api/template');
+  } catch { return toLogin(); }
   await Promise.all([loadMonth(), loadDay(), loadList(), loadTemplate()]);
   render();
 }
